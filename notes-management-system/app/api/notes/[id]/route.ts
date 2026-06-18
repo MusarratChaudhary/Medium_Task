@@ -3,7 +3,30 @@ import dbConnect from '@/lib/mongodb';
 import Note from '@/models/Note';
 import { getUserIdFromToken } from '@/lib/auth';
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const userId = await getUserIdFromToken();
+    if (!userId) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { id } = await params;
+    await dbConnect();
+
+    const note = await Note.findOne({ _id: id, userId });
+
+    if (!note) {
+      return NextResponse.json({ message: 'Note not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(note);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Something went wrong';
+    return NextResponse.json({ message }, { status: 500 });
+  }
+}
+
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const userId = await getUserIdFromToken();
     console.log('PUT - userId:', userId);
@@ -37,7 +60,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const userId = await getUserIdFromToken();
     if (!userId) {
@@ -66,7 +89,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
   }
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const userId = await getUserIdFromToken();
     if (!userId) {
