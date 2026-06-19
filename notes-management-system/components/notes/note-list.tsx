@@ -166,7 +166,7 @@ function NoteCard({ note, index }: { note: Note; index: number }) {
       )}
     >
       <div className="flex items-start justify-between mb-3">
-        <h3 className="text-sm font-bold truncate flex-1 pr-4 tracking-tight group-hover:text-primary transition-colors">{note.title}</h3>
+        <h3 className="text-sm font-bold line-clamp-2 flex-1 pr-24 tracking-tight group-hover:text-primary transition-colors">{note.title}</h3>
       </div>
       
       <p className="text-xs text-muted-foreground line-clamp-3 mb-5 flex-1 leading-relaxed font-medium">
@@ -174,11 +174,11 @@ function NoteCard({ note, index }: { note: Note; index: number }) {
       </p>
 
       <div className="flex items-center justify-between mt-auto pt-4 border-t border-border/50">
-        <div className="flex items-center gap-2 overflow-hidden">
+        <div className="flex items-center gap-2 overflow-hidden min-w-0 flex-1">
           {note.tags?.map((tag: string) => (
-            <span key={tag} className="flex items-center gap-1 text-[10px] font-bold text-primary bg-primary/5 px-2 py-0.5 rounded border border-primary/10 transition-colors group-hover:bg-primary/10">
-              <Tag className="h-2.5 w-2.5" />
-              {tag}
+            <span key={tag} className="flex items-center gap-1 text-[10px] font-bold text-primary bg-primary/5 px-2 py-0.5 rounded border border-primary/10 transition-colors group-hover:bg-primary/10 min-w-0 max-w-[120px]">
+              <Tag className="h-2.5 w-2.5 shrink-0" />
+              <span className="truncate">{tag}</span>
             </span>
           ))}
         </div>
@@ -188,7 +188,10 @@ function NoteCard({ note, index }: { note: Note; index: number }) {
       </div>
 
       {/* Top Right Action Container */}
-      <div className="absolute top-3 right-3 flex items-center gap-1 bg-card/80 backdrop-blur-sm p-0.5 rounded-lg border shadow-sm">
+      <div 
+        onClick={(e) => e.stopPropagation()} 
+        className="absolute top-3 right-3 flex items-center gap-1 bg-card/80 backdrop-blur-sm p-0.5 rounded-lg border shadow-sm"
+      >
         {currentView === 'all' || currentView === 'favorites' ? (
           <>
             <button 

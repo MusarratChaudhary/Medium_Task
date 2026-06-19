@@ -1,5 +1,7 @@
 "use client";
 
+import * as React from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Sidebar } from "@/components/layout/sidebar";
 import { NoteList } from "@/components/notes/note-list";
 import { NoteModal } from "@/components/notes/note-modal";
@@ -9,7 +11,17 @@ import { useNotesContext } from "@/components/notes/notes-context";
 import { NotePreview } from "@/components/notes/note-preview";
 
 export default function DashboardPage() {
-  const { selectedNote } = useNotesContext();
+  const { selectedNote, setSelectedNote } = useNotesContext();
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024); // 1024px is the lg breakpoint in Tailwind CSS
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   return (
     <div className="flex h-screen w-full bg-background overflow-hidden">
@@ -52,6 +64,22 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
+
+      {/* Mobile Dialog view for Selected Note */}
+      {isMobile && (
+        <DialogPrimitive.Root open={!!selectedNote} onOpenChange={(open) => !open && setSelectedNote(null)}>
+          <DialogPrimitive.Portal>
+            <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/40 backdrop-blur-[2px] animate-in fade-in duration-300" />
+            <DialogPrimitive.Content 
+              className="fixed left-[50%] top-[50%] z-50 w-[90vw] max-w-lg translate-x-[-50%] translate-y-[-50%] border bg-card p-0 shadow-2xl duration-200 animate-in fade-in zoom-in-95 rounded-2xl flex flex-col max-h-[85vh] overflow-hidden"
+            >
+              <div className="overflow-y-auto custom-scrollbar">
+                {selectedNote && <NotePreview note={selectedNote} />}
+              </div>
+            </DialogPrimitive.Content>
+          </DialogPrimitive.Portal>
+        </DialogPrimitive.Root>
+      )}
     </div>
   );
 }
