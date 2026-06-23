@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+/* Enable class-based dark mode in Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #ffffff;
+  --foreground: #18181b;
+  --color-background: #ffffff;
+  --color-foreground: #18181b;
+  --color-cinema-red: #e50914;
+  --color-cinema-black: #050505;
+  --color-cinema-charcoal: #0f0f12;
+}
+
+.dark {
+  --background: #050505;
+  --foreground: #f4f4f5;
+  --color-background: #050505;
+  --color-foreground: #f4f4f5;
+}
+
+@theme {
+  --color-background: initial;
+  --color-foreground: initial;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  
+  /* Static cinema palette */
+  --color-cinema-black: #050505;
+  --color-cinema-charcoal: #0f0f12;
+  --color-cinema-red: #e50914;
+  
+  /* Shimmer animations for skeleton cards */
+  --animate-shimmer: shimmer 1.8s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom scrollbars for clean premium visuals */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #0d0d0f;
+}
+
+::-webkit-scrollbar-track {
+  background: #f4f4f5;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #e50914;
+}
